@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Lexend", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.6;
+    letter-spacing: 0.005em;
+  }
+
+  /* Visible, calm focus states for keyboard navigation */
+  :focus-visible {
+    outline: 3px solid theme("colors.secondary.400");
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* App-level equivalent of the above, driven by a student's own
+     SensoryProfile.reduce_motion setting (applied as a class on
+     <html> by SensoryContext) rather than only the OS-level media
+     query — someone may want reduced motion in this app specifically
+     without having it set system-wide. */
+  html.reduce-motion *,
+  html.reduce-motion *::before,
+  html.reduce-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* SensoryProfile.high_contrast: strengthens text/border contrast
+     without changing the overall color identity of the app — darker
+     body text, firmer borders, no color changes that would fight the
+     calm palette used throughout. */
+  html.high-contrast {
+    --tw-text-opacity: 1;
+  }
+  html.high-contrast body {
+    color: #0b0f19;
+  }
+  html.high-contrast .text-muted-foreground {
+    color: #334155 !important;
+  }
+  html.high-contrast .border-border {
+    border-color: #64748b !important;
+  }
+  html.high-contrast .clay-card,
+  html.high-contrast .glass-panel {
+    border-width: 2px;
+  }
+
+  /* SensoryProfile.font_preference === "opendyslexic": swaps body text
+     to a rounder, more open-letterform font stack. Deliberately NOT
+     dependent on bundling the actual OpenDyslexic font file — an
+     earlier version of this did that via an npm package imported in
+     main.tsx, but that made the ENTIRE app's build depend on that
+     package being installed/cached correctly, which is too fragile a
+     failure mode for a cosmetic preference to cause (a blank page for
+     everyone, not just students who chose this font, if that
+     dependency ever failed to resolve). "Comic Sans MS" is a real,
+     documented, widely-available alternative recommended in dyslexia-
+     readability guidance for exactly this reason (rounder letterforms,
+     less b/d/p/q symmetry) — every OS ships it or an equivalent
+     already, so this is a same-page-reflow-only change, never a
+     network/build dependency. Only applied when a student explicitly
+     picks it in Settings — this class is never added by default. */
+  html.font-opendyslexic body {
+    font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", "Marker Felt", cursive, ui-sans-serif, system-ui, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-tight;
+  }
+  h1,
+  h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  ::selection { background: theme("colors.primary.200"); }
+}
+
+@layer utilities {
+  .sr-only-focusable:not(:focus) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @keyframes question-in-forward {
+    from { opacity: 0; transform: translateX(24px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes question-in-back {
+    from { opacity: 0; transform: translateX(-24px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  .animate-question-in-forward { animation: question-in-forward 0.28s ease-out; }
+  .animate-question-in-back    { animation: question-in-back 0.28s ease-out; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-question-in-forward,
+    .animate-question-in-back {
+      animation: none;
+    }
+  }
+
+  /* Student surfaces: pale pebbles with one soft lift. Class names kept so every page inherits. */
+  .clay-card {
+    @apply rounded-2xl border border-border/70 bg-surface shadow-clay;
+  }
+  .clay-btn {
+    @apply rounded-xl border border-border/70 bg-surface shadow-clay transition-shadow;
+  }
+  .clay-btn:active {
+    @apply shadow-clayPressed;
+  }
+  .clay-inset {
+    @apply rounded-xl bg-primary-50 shadow-clayInset;
+  }
+
+  /* Adult surfaces (teacher/admin/login): frosted, airy panels over the mist background. */
+  .glass-panel {
+    @apply rounded-2xl border border-white/70 bg-white/75 shadow-glass backdrop-blur-xl;
+  }
+  .glass-panel-dark {
+    @apply rounded-2xl border border-white/10 bg-slate-900/40 shadow-glass backdrop-blur-xl;
+  }
+  .spatial-bg {
+    background-color: #f1f6f6;
+    background-image:
+      radial-gradient(at 10% 10%, rgba(111, 191, 196, 0.35) 0px, transparent 45%),
+      radial-gradient(at 92% 8%, rgba(173, 161, 229, 0.28) 0px, transparent 45%),
+      radial-gradient(at 85% 90%, rgba(162, 216, 218, 0.30) 0px, transparent 50%);
+  }
+  .spatial-blob {
+    @apply absolute rounded-full blur-3xl opacity-40;
+    animation: spatial-drift 22s ease-in-out infinite;
+  }
+  @keyframes spatial-drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%       { transform: translate(2%, 3%) scale(1.06); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spatial-blob { animation: none; }
+  }
+}

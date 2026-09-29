@@ -1,0 +1,32 @@
+# Secrets (keep only .env.example files in git)
+.env
+.env.*
+!.env.example
+
+# Frontend
+node_modules/
+dist/
+build/
+.vite/
+*.local
+coverage/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Local databases and logs
+*.db
+*.sqlite3
+*.log
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+backend/app/ml/emotion_model_onnx/model.onnx

@@ -1,0 +1,61 @@
+# Memora — Backend Dependencies
+#
+# bcrypt is pinned below 4.0 because passlib (latest release: 1.7.4,
+# unmaintained regarding this issue) reads `bcrypt.__about__.__version__`,
+# an attribute removed starting in bcrypt 4.0.0. Without this pin,
+# password/PIN hashing raises "AttributeError: module 'bcrypt' has no
+# attribute '__about__'" at runtime. See app/core/security.py.
+
+# --- Web framework ---
+fastapi==0.141.1
+uvicorn==0.52.1
+
+# --- Database ---
+sqlalchemy==2.0.51
+alembic==1.18.5
+psycopg2-binary==2.9.10
+
+# --- Configuration & validation ---
+pydantic==2.13.4
+pydantic-settings==2.14.2
+email-validator==2.3.0
+
+# --- Authentication ---
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.5.0
+bcrypt<4.0
+
+# --- Machine Learning (ensemble engagement model, BKT, early warning) ---
+scikit-learn==1.8.0
+joblib==1.5.3
+numpy==2.4.4
+pandas==3.0.2
+shap==0.46.0
+
+# --- Emotion classification (fine-tuned DistilBERT, ONNX inference) ---
+# CPU-only inference — no GPU/torch required at runtime. If either
+# package is missing, app/ml/emotion_classifier.py falls back
+# automatically to a deterministic keyword-lexicon classifier, so the
+# app still runs without these two.
+onnxruntime==1.20.1
+transformers==4.47.1
+
+# --- Generative AI ---
+# Gemini is now the primary provider for Mira/quiz/reflection generation.
+# httpx is retained for the optional legacy Ollama fallback path
+# (OLLAMA_ENABLED=false by default — see app/core/config.py).
+google-generativeai==0.8.5
+httpx==0.28.1
+requests==2.32.3
+
+# --- Reporting ---
+markdown==3.9
+reportlab==4.3.0
+
+# --- Rate limiting / production hardening ---
+slowapi==0.1.9
+
+# --- Testing ---
+pytest==8.4.1
+pytest-asyncio==0.25.3
+
