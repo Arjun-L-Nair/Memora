@@ -60,7 +60,7 @@ introduced.
 """
 
 from __future__ import annotations
-
+import os
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -94,6 +94,7 @@ from app.database.seed_skills import seed_skills_on_startup
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    *[o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()],
 ]
 
 # --- Logging ---
