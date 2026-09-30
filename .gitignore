@@ -29,4 +29,4 @@ venv/
 .DS_Store
 Thumbs.db
 
-backend/app/ml/emotion_model_onnx/model.onnx
+backend/app/ml/emotion_model_onnx/model_full_backup.onnx
