@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { Lock, CheckCircle2, Sparkles, Puzzle, Calculator, Shapes, Brain, Clock } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import {
   getSkillExercises,
